@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GR10</title>
+  <title>La Grande Traversée des Pyrénées</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin="" />
   <link rel="icon" href="icon.png" type="image/png">
   <style>
@@ -60,7 +60,6 @@
 
     .rotating-icon img {
       animation: spin 5s linear infinite;
-      /* Applique l'animation fusionnée */
       width: 90px;
       height: 90px;
       pointer-events: none;
@@ -92,18 +91,14 @@
       top: 10px;
       right: 0;
       z-index: 9999;
-      /* Assure que l'image est au-dessus de tout le reste */
       height: 90px;
-      /* Hauteur fixe de 100px */
       width: auto;
-      /* Largeur automatique pour maintenir les proportions */
     }
   </style>
 </head>
 
 <body>
-  <!-- Image fixe en haut au centre -->
-  <img id="fixed-image" src="https://raw.githubusercontent.com/teorpkt/teorpkt.github.io/main/logo.png" alt="Logo" />
+  <img id="fixed-image" src="logo.png" alt="Logo" />
 
   <div id="map"></div>
 
