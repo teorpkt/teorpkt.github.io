@@ -59,19 +59,41 @@
     }
 
     .rotating-icon img {
-      animation: spin 5s linear infinite;
+      animation: spin-bounce 7s linear infinite;
+      /* Applique l'animation fusionnée */
       width: 90px;
       height: 90px;
       pointer-events: none;
     }
 
-    @keyframes spin {
+    @keyframes spin-bounce {
       0% {
-        transform: rotate(0deg);
+        transform: rotate(0deg) translateY(0px);
+      }
+
+      20% {
+        transform: rotate(72deg) translateY(-5px);
+        /* Premier saut */
+      }
+
+      40% {
+        transform: rotate(144deg) translateY(5px);
+        /* Retour à la position initiale */
+      }
+
+      60% {
+        transform: rotate(216deg) translateY(-5px);
+        /* Deuxième saut */
+      }
+
+      80% {
+        transform: rotate(288deg) translateY(5px);
+        /* Retour à la position initiale */
       }
 
       100% {
-        transform: rotate(360deg);
+        transform: rotate(360deg) translateY(0px);
+        /* Fin de l'animation */
       }
     }
 
@@ -85,10 +107,24 @@
     .leaflet-container {
       touch-action: none;
     }
+
+    #fixed-svg {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 9999;
+      /* Assure que le SVG est au-dessus de tout le reste */
+    }
   </style>
 </head>
 
 <body>
+  <!-- SVG fixe en haut au centre -->
+  <svg id="fixed-svg" xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-star">
+    <polygon points="5 3 19 12 5 21 5 12 19 3"></polygon>
+  </svg>
+
   <div id="map"></div>
 
   <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
