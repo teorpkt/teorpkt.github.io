@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>La Grande Traversée des Pyrénées</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin="" />
-  <link rel="icon" href="icon.png" type="image/png">
+  <link rel="icon" href="logo.svg" type="image/svg+xml">
   <style>
     html,
     body {
@@ -89,7 +89,7 @@
     #fixed-image {
       position: fixed;
       top: 10px;
-      right: 0;
+      right: 10px;
       z-index: 9999;
       height: 90px;
       width: auto;
@@ -98,7 +98,7 @@
 </head>
 
 <body>
-  <img id="fixed-image" src="logo.png" alt="Logo" />
+  <img id="fixed-image" src="logo.svg" alt="Logo" />
 
   <div id="map"></div>
 
@@ -112,26 +112,33 @@
       const randomIndex = Math.floor(Math.random() * popupTexts.length);
       return popupTexts[randomIndex];
     }
+
     const map = L.map('map').setView([0, 0], 15); // Vue initiale
     L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
       maxZoom: 15,
       minZoom: 6
     }).addTo(map);
+
     const defaultAttributionControl = map.attributionControl;
     if (defaultAttributionControl) {
       map.removeControl(defaultAttributionControl);
     }
+
     const customAttributionControl = L.control({
       position: 'bottomright'
     });
+
     customAttributionControl.onAdd = function() {
       const div = L.DomUtil.create('div', 'custom-attribution');
       div.innerHTML =
         '<a href="https://www.instagram.com/teorpkt" target="_blank">@teorpkt</a> | Crédits: <a href="https://www.openstreetmap.org/" target="_blank">OpenStreetMap</a> / <a href="https://www.cartodb.com/locations/" target="_blank">CartoDB</a> / <a href="https://leafletjs.com/" target="_blank">Leaflet</a>';
       return div;
     };
+
     customAttributionControl.addTo(map);
+
     const apiUrl = 'https://script.google.com/macros/s/AKfycbyCQthvDiyh-DryYVVQP6dKYjSIOnpzwfj4RE_Qjyy_vpZbSjjVJEFHR0OXYXOCpayL/exec';
+
     fetch(apiUrl)
       .then(response => {
         if (!response.ok) {
@@ -143,23 +150,28 @@
         if (Array.isArray(data) && data.length > 0 && data[0].hasOwnProperty('lat') && data[0].hasOwnProperty('lng')) {
           const latlngs = data.map(point => [point.lat, point.lng]);
           const lastPoint = latlngs[latlngs.length - 1];
+
           // Centrage et zoom sur le dernier point
           map.setView(lastPoint, 10);
+
           const lastIcon = L.divIcon({
             className: 'rotating-icon',
-            html: '<img src="icon.png" alt="Icon"/>',
+            html: '<img src="icon.svg" alt="Icon"/>',
             iconSize: [90, 90],
             iconAnchor: [45, 45]
           });
+
           latlngs.forEach((latlng, index) => {
             const icon = index === latlngs.length - 1 ? lastIcon : L.divIcon({
               className: 'custom-icon',
               iconSize: [0, 0]
             });
+
             const marker = L.marker(latlng, {
               icon: icon,
               interactive: index === latlngs.length - 1
             }).addTo(map);
+
             if (index === latlngs.length - 1) {
               marker.on('click', function() {
                 const popupText = getRandomPopupText();
@@ -172,6 +184,7 @@
               });
             }
           });
+
           L.polyline(latlngs, {
             color: '#DD4A25',
             weight: 3,
