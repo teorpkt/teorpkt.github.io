@@ -37,9 +37,12 @@
 
     .custom-attribution {
       background: white;
-      padding: 0.3125rem; /* 5px */
-      border-radius: 0.1875rem; /* 3px */
-      font-size: 0.75rem; /* 12px */
+      padding: 0.3125rem;
+      /* 5px */
+      border-radius: 0.1875rem;
+      /* 3px */
+      font-size: 0.75rem;
+      /* 12px */
       color: #333;
       z-index: 1000;
       text-align: right;
@@ -59,8 +62,10 @@
 
     .rotating-icon img {
       animation: spin 4s linear infinite;
-      width: 5.625rem; /* 90px */
-      height: 5.625rem; /* 90px */
+      width: 5.625rem;
+      /* 90px */
+      height: 5.625rem;
+      /* 90px */
       pointer-events: none;
     }
 
@@ -68,15 +73,19 @@
       0% {
         transform: rotate(0deg) scale(1);
       }
+
       25% {
         transform: rotate(90deg) scale(0.7);
       }
+
       50% {
         transform: rotate(180deg) scale(1);
       }
+
       75% {
         transform: rotate(270deg) scale(0.7);
       }
+
       100% {
         transform: rotate(360deg) scale(1);
       }
@@ -95,10 +104,12 @@
 
     #fixed-image {
       position: fixed;
-      top: 0.625rem; /* 10px */
-      right: 0.625rem; /* 10px */
+      top: 0.625rem;
+      /* 10px */
+      right: 0.625rem;
+      /* 10px */
       z-index: 9999;
-      height: 5rem; 
+      height: 5rem;
       width: auto;
     }
   </style>
@@ -118,27 +129,21 @@
       maxZoom: 15,
       minZoom: 6
     }).addTo(map);
-
     const defaultAttributionControl = map.attributionControl;
     if (defaultAttributionControl) {
       map.removeControl(defaultAttributionControl);
     }
-
     const customAttributionControl = L.control({
       position: 'bottomright'
     });
-
     customAttributionControl.onAdd = function() {
       const div = L.DomUtil.create('div', 'custom-attribution');
       div.innerHTML =
         '<a href="https://www.instagram.com/teorpkt" target="_blank">@teorpkt</a> | Crédits: <a href="https://www.openstreetmap.org/" target="_blank">OpenStreetMap</a> / <a href="https://www.cartodb.com/locations/" target="_blank">CartoDB</a> / <a href="https://leafletjs.com/" target="_blank">Leaflet</a>';
       return div;
     };
-
     customAttributionControl.addTo(map);
-
     const apiUrl = 'https://script.google.com/macros/s/AKfycbyCQthvDiyh-DryYVVQP6dKYjSIOnpzwfj4RE_Qjyy_vpZbSjjVJEFHR0OXYXOCpayL/exec';
-
     fetch(apiUrl)
       .then(response => {
         if (!response.ok) {
@@ -150,28 +155,24 @@
         if (Array.isArray(data) && data.length > 0 && data[0].hasOwnProperty('lat') && data[0].hasOwnProperty('lng')) {
           const latlngs = data.map(point => [point.lat, point.lng]);
           const lastPoint = latlngs[latlngs.length - 1];
-
           // Centrage et zoom sur le dernier point
           map.setView(lastPoint, 10);
-
           const lastIcon = L.divIcon({
             className: 'rotating-icon',
             html: '<img src="https://raw.githubusercontent.com/teorpkt/teorpkt.github.io/main/icon.svg" alt="Icon"/>',
-            iconSize: ['90', '90'], /* 90px */
+            iconSize: ['90', '90'],
+            /* 90px */
             iconAnchor: ['45', '45'] /* 45px */
           });
-
           latlngs.forEach((latlng, index) => {
             const icon = index === latlngs.length - 1 ? lastIcon : L.divIcon({
               className: 'custom-icon',
               iconSize: ['0', '0']
             });
-
             const marker = L.marker(latlng, {
               icon: icon,
               interactive: index === latlngs.length - 1
             }).addTo(map);
-
             if (index === latlngs.length - 1) {
               marker.on('click', function() {
                 const sound = document.getElementById('click-sound');
@@ -179,10 +180,9 @@
               });
             }
           });
-
           L.polyline(latlngs, {
-            color: '#DD4A25',
-            weight: 0.1875 /* 3px */,
+            color: '#000000',
+            weight: 3 /* 3px */ ,
             interactive: false
           }).addTo(map);
         }
