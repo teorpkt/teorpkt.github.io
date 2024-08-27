@@ -61,8 +61,8 @@
 
     .rotating-icon img {
       animation: spin 5s linear infinite;
-      width: 48px;
-      height: 48px;
+      width: 64px;
+      height: 64px;
       pointer-events: none;
     }
 
@@ -141,8 +141,8 @@
           const lastIcon = L.divIcon({
             className: 'rotating-icon',
             html: '<img src="icon.png" alt="Icon"/>',
-            iconSize: [48, 48],
-            iconAnchor: [24, 24]
+            iconSize: [64, 64],
+            iconAnchor: [32, 32]
           });
           latlngs.forEach((latlng, index) => {
             const icon = index === latlngs.length - 1 ? lastIcon : L.divIcon({
