@@ -21,8 +21,7 @@
       width: 100%;
     }
 
-    .leaflet-marker-icon,
-    .leaflet-popup {
+    .leaflet-marker-icon {
       pointer-events: none;
     }
 
@@ -59,7 +58,7 @@
     }
 
     .rotating-icon img {
-      animation: spin 5s linear infinite;
+      animation: spin 4s linear infinite;
       width: 5.625rem; /* 90px */
       height: 5.625rem; /* 90px */
       pointer-events: none;
@@ -67,11 +66,19 @@
 
     @keyframes spin {
       0% {
-        transform: rotate(0deg);
+        transform: rotate(0deg) scale(1);
       }
-
+      25% {
+        transform: rotate(90deg) scale(0.7);
+      }
+      50% {
+        transform: rotate(180deg) scale(1);
+      }
+      75% {
+        transform: rotate(270deg) scale(0.7);
+      }
       100% {
-        transform: rotate(360deg);
+        transform: rotate(360deg) scale(1);
       }
     }
 
@@ -102,17 +109,10 @@
 
   <div id="map"></div>
 
+  <audio id="click-sound" src="https://cdn.pixabay.com/download/audio/2023/12/09/audio_37d2c0e795.mp3"></audio> <!-- Remplacez par le lien vers votre son -->
+
   <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
   <script>
-    const popupTexts = [
-      "Coucou !", "Qui va avoir le plus d'ampoules ?", "Tout va bien tant que Téo a du saucisson...", "Clarisse ronfle trop, horrible les bivouacs", "On serre les fesses pour éviter un max d'orage", "Si vous voyez quelqu'un parler à un caillou, ne vous inquiétez pas, c'est juste Téo qui se parle pour se motiver !", "Les paysages sont magnifiques… dommage qu'on ne les voie qu'à travers nos larmes de sueur.", "Si vous entendez des cris de désespoir, c’est juste Clarisse en train de chercher du chocolat.", "On compte les jours comme les kilomètres : on ne sait jamais si on doit rire ou pleurer !", "On vous conseille de ne pas trop regarder les cartes : chaque fois qu’on le fait, le GR10 semble se rallonger mystérieusement.", "Bzz bzzz les moustiques...", "On rêve d'une douche !", "ON VEUT UNE PIZZA.", "Téo pète trop dans la tente."
-    ];
-
-    function getRandomPopupText() {
-      const randomIndex = Math.floor(Math.random() * popupTexts.length);
-      return popupTexts[randomIndex];
-    }
-
     const map = L.map('map').setView([0, 0], 15); // Vue initiale
     L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
       maxZoom: 15,
@@ -174,13 +174,8 @@
 
             if (index === latlngs.length - 1) {
               marker.on('click', function() {
-                const popupText = getRandomPopupText();
-                L.popup({
-                    offset: [0, -2.1875] /* [0, -35px] */
-                  })
-                  .setLatLng(latlng)
-                  .setContent(popupText)
-                  .openOn(map);
+                const sound = document.getElementById('click-sound');
+                sound.play();
               });
             }
           });
