@@ -31,8 +31,45 @@
 
     .custom-icon {
       display: block;
-      width: 0;
-      height: 0;
+      width: 10px; /* Taille du marqueur */
+      height: 10px; /* Taille du marqueur */
+      border-radius: 50%;
+      background-color: #F25128; /* Couleur du marqueur */
+    }
+
+    .rotating-icon {
+      width: 5.625rem; /* Taille du dernier marqueur */
+      height: 5.625rem; /* Taille du dernier marqueur */
+      background: transparent;
+    }
+
+    .rotating-icon img {
+      animation: spin 4s linear infinite;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg) scale(1);
+      }
+
+      25% {
+        transform: rotate(90deg) scale(0.7);
+      }
+
+      50% {
+        transform: rotate(180deg) scale(1);
+      }
+
+      75% {
+        transform: rotate(270deg) scale(0.7);
+      }
+
+      100% {
+        transform: rotate(360deg) scale(1);
+      }
     }
 
     .custom-attribution {
@@ -58,37 +95,6 @@
 
     .custom-attribution a:hover {
       text-decoration: underline;
-    }
-
-    .rotating-icon img {
-      animation: spin 4s linear infinite;
-      width: 5.625rem;
-      /* 90px */
-      height: 5.625rem;
-      /* 90px */
-      pointer-events: none;
-    }
-
-    @keyframes spin {
-      0% {
-        transform: rotate(0deg) scale(1);
-      }
-
-      25% {
-        transform: rotate(90deg) scale(0.7);
-      }
-
-      50% {
-        transform: rotate(180deg) scale(1);
-      }
-
-      75% {
-        transform: rotate(270deg) scale(0.7);
-      }
-
-      100% {
-        transform: rotate(360deg) scale(1);
-      }
     }
 
     .leaflet-container {
@@ -129,13 +135,16 @@
       maxZoom: 15,
       minZoom: 6
     }).addTo(map);
+    
     const defaultAttributionControl = map.attributionControl;
     if (defaultAttributionControl) {
       map.removeControl(defaultAttributionControl);
     }
+    
     const customAttributionControl = L.control({
       position: 'bottomright'
     });
+    
     customAttributionControl.onAdd = function() {
       const div = L.DomUtil.create('div', 'custom-attribution');
       div.innerHTML =
@@ -143,6 +152,30 @@
       return div;
     };
     customAttributionControl.addTo(map);
+
+    // Ajout du tracé en GeoJSON
+    const geoJsonUrl = 'https://raw.githubusercontent.com/teorpkt/teorpkt.github.io/main/gr10.geojson';
+    fetch(geoJsonUrl)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Erreur HTTP! Statut: ' + response.status);
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (data && data.features) {
+          L.geoJSON(data, {
+            style: function() {
+              return {
+                color: '#333333',  // Couleur du tracé
+                weight: 1,     // Épaisseur du tracé
+              };
+            }
+          }).addTo(map);
+        }
+      });
+
+    // Récupération des points et ajout des marqueurs
     const apiUrl = 'https://script.google.com/macros/s/AKfycbyCQthvDiyh-DryYVVQP6dKYjSIOnpzwfj4RE_Qjyy_vpZbSjjVJEFHR0OXYXOCpayL/exec';
     fetch(apiUrl)
       .then(response => {
@@ -156,19 +189,18 @@
           const latlngs = data.map(point => [point.lat, point.lng]);
           const lastPoint = latlngs[latlngs.length - 1];
           // Centrage et zoom sur le dernier point
-          map.setView(lastPoint, 10);
+          map.setView(lastPoint, 12);
+          const redIcon = L.divIcon({
+            className: 'custom-icon', // Utiliser la classe pour l'icône rouge
+            iconSize: [10, 10] // Taille du marqueur
+          });
           const lastIcon = L.divIcon({
             className: 'rotating-icon',
             html: '<img src="https://raw.githubusercontent.com/teorpkt/teorpkt.github.io/main/icon.svg" alt="Icon"/>',
-            iconSize: ['90', '90'],
-            /* 90px */
-            iconAnchor: ['45', '45'] /* 45px */
+            iconSize: [90, 90] // Taille du dernier marqueur
           });
           latlngs.forEach((latlng, index) => {
-            const icon = index === latlngs.length - 1 ? lastIcon : L.divIcon({
-              className: 'custom-icon',
-              iconSize: ['0', '0']
-            });
+            const icon = index === latlngs.length - 1 ? lastIcon : redIcon;
             const marker = L.marker(latlng, {
               icon: icon,
               interactive: index === latlngs.length - 1
@@ -180,11 +212,6 @@
               });
             }
           });
-          L.polyline(latlngs, {
-            color: '#000000',
-            weight: 3 /* 3px */ ,
-            interactive: false
-          }).addTo(map);
         }
       });
   </script>
