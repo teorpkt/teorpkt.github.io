@@ -31,11 +31,9 @@
     }
 
     .custom-icon {
-      background-color: #333333;
-      border-radius: 50%;
       display: block;
-      width: 10px;
-      height: 10px;
+      width: 0px;
+      height: 0px;
     }
 
     .custom-attribution {
@@ -98,23 +96,20 @@
     const popupTexts = [
       "Coucou !", "Qui va avoir le plus d'ampoules ?", "Tout va bien tant que Téo a du saucisson...", "Clarisse ronfle trop, horrible les bivouacs", "On serre les fesses pour éviter un max d'orage", "Si vous voyez quelqu'un parler à un caillou, ne vous inquiétez pas, c'est juste Téo qui se parle pour se motiver !", "Les paysages sont magnifiques… dommage qu'on ne les voie qu'à travers nos larmes de sueur.", "Si vous entendez des cris de désespoir, c’est juste Clarisse en train de chercher du chocolat.", "On compte les jours comme les kilomètres : on ne sait jamais si on doit rire ou pleurer !", "On vous conseille de ne pas trop regarder les cartes : chaque fois qu’on le fait, le GR10 semble se rallonger mystérieusement.", "Bzz bzzz les moustiques...", "On rêve d'une douche !", "ON VEUT UNE PIZZA.", "Téo pète trop dans la tente."
     ];
-    // Fonction pour obtenir un texte aléatoire
+
     function getRandomPopupText() {
       const randomIndex = Math.floor(Math.random() * popupTexts.length);
       return popupTexts[randomIndex];
     }
-    // Initialisation de la carte
     const map = L.map('map').setView([42.9, 0.65], 5); // Vue initiale
     L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
       maxZoom: 15,
       minZoom: 7
     }).addTo(map);
-    // Retrait du contrôle d'attribution par défaut
     const defaultAttributionControl = map.attributionControl;
     if (defaultAttributionControl) {
       map.removeControl(defaultAttributionControl);
     }
-    // Contrôle d'attribution personnalisé
     const customAttributionControl = L.control({
       position: 'bottomright'
     });
@@ -148,7 +143,7 @@
           latlngs.forEach((latlng, index) => {
             const icon = index === latlngs.length - 1 ? lastIcon : L.divIcon({
               className: 'custom-icon',
-              iconSize: [10, 10]
+              iconSize: [0, 0]
             });
             const marker = L.marker(latlng, {
               icon: icon,
