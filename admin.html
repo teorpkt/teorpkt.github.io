@@ -6,101 +6,18 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
   <title>Météo soir via coordonnées</title>
   <style>
-    html {
-  font-size: 14px;
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Roboto Mono", monospace;
-}
-
-body {
-  margin: 0;
-  padding: 0;
-  height: 100vh;
-  background-color: #000000;
-  color: #00FF00;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-#console-container {
-  background-color: #000000;
-  border: 1px solid #00FF00;
-  padding: 2rem;
-  width: 90%;
-  max-width: 40rem;
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-input[type="text"] {
-  padding: 0.5rem;
-  font-size: 1rem;
-  border: 1px solid #00FF00;
-  border-radius: 0.1rem;
-  background-color: #000000;
-  color: #00FF00;
-  margin-bottom: 1rem;
-  width: 100%;
-}
-
-input[type="text"]::placeholder {
-  color: rgba(0, 255, 0, 0.5); /* Vert translucide */
-}
-
-button {
-  padding: 0.5rem;
-  font-size: 1rem;
-  border: 1px solid #00FF00;
-  border-radius: 0.1rem;
-  background-color: #000000;
-  color: #00FF00;
-  cursor: pointer;
-  width: 100%;
-  margin-bottom: 0.5rem;
-}
-
-button[type="submit"] {
-  background-color: #00FF00;
-  color: #000000;
-}
-
-button[type="submit"]:hover {
-  background-color: #009900;
-}
-
-button[type="button"]:hover {
-  background-color: #003300;
-}
-
-#api-key-selector-container {
-  margin-top: 1rem;
-}
-
-select#apiKey {
-  font-size: 1rem;
-  color: #00FF00;
-  background-color: #000000;
-  border: 1px solid #00FF00;
-  border-radius: 0.1rem;
-  padding: 0.5rem;
-  margin-bottom: 0.5rem;
-  width: 100%;
-}
-
-select#apiKey:hover {
-  background-color: #003300;
-}
-
+    html { font-size: 14px; }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Roboto Mono", monospace; }
+    body { margin: 0; padding: 0; height: 100vh; background-color: #333; color: #333; display: flex; justify-content: center; align-items: center; }
+    #console-container { background-color: #fff; border: 1px solid #ddd; padding: 1.5rem; width: 90%; max-width: 30rem; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+    form { display: flex; flex-direction: column; gap: 0.5rem; }
+    input[type="text"] { padding: 0.75rem; font-size: 1rem; border: 1px solid #ccc; border-radius: 0.25rem; background-color: #fff; color: #333; margin-bottom: 0.5rem; width: 100%; }
+    input[type="text"]::placeholder { color: #888; }
+    button { padding: 0.75rem; font-size: 1rem; border: 1px solid #ccc; border-radius: 0.25rem; background-color: #f5f5f5; color: #333; cursor: pointer; width: 100%; margin-bottom: 0.5rem; transition: background-color 0.3s ease, border-color 0.3s ease; }
+    button:hover { background-color: #e0e0e0; border-color: #bbb; }
+    select#apiKey { font-size: 1rem; color: #333; background-color: #fff; border: 1px solid #ccc; border-radius: 0.25rem; padding: 0.75rem; margin-bottom: 0.5rem; width: 100%; transition: background-color 0.3s ease, border-color 0.3s ease; }
+    select#apiKey:hover { background-color: #f0f0f0; border-color: #bbb; }
+    #api-key-selector-container { margin-top: 1rem; }
   </style>
 </head>
 <body>
@@ -125,153 +42,41 @@ select#apiKey:hover {
     </div>
   </div>
   <script>
-    let globalCoordinates = "";
-    let globalWeatherText = "";
-
+    let globalCoordinates = "", globalWeatherText = "";
     async function getWeatherForecast(lat, lon, apiKey) {
       globalCoordinates = `${lat},${lon}`;
       const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=fr`;
-      try {
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error(`Erreur HTTP: ${response.status} ${response.statusText}`);
-        }
-        return await response.json();
-      } catch (error) {
-        return null;
-      }
+      try { const response = await fetch(url); if (!response.ok) throw new Error(`Erreur HTTP: ${response.status} ${response.statusText}`); return await response.json(); }
+      catch (error) { return null; }
     }
-
     function getWindDirection(degrees) {
-      if (degrees >= 337.5 || degrees < 22.5) return "Nord";
-      if (degrees >= 22.5 && degrees < 67.5) return "Nord-Est";
-      if (degrees >= 67.5 && degrees < 112.5) return "Est";
-      if (degrees >= 112.5 && degrees < 157.5) return "Sud-Est";
-      if (degrees >= 157.5 && degrees < 202.5) return "Sud";
-      if (degrees >= 202.5 && degrees < 247.5) return "Sud-Ouest";
-      if (degrees >= 247.5 && degrees < 292.5) return "Ouest";
-      if (degrees >= 292.5 && degrees < 337.5) return "Nord-Ouest";
+      if (degrees >= 337.5 || degrees < 22.5) return "Nord"; if (degrees >= 22.5 && degrees < 67.5) return "Nord-Est"; if (degrees >= 67.5 && degrees < 112.5) return "Est"; if (degrees >= 112.5 && degrees < 157.5) return "Sud-Est"; if (degrees >= 157.5 && degrees < 202.5) return "Sud"; if (degrees >= 202.5 && degrees < 247.5) return "Sud-Ouest"; if (degrees >= 247.5 && degrees < 292.5) return "Ouest"; if (degrees >= 292.5 && degrees < 337.5) return "Nord-Ouest";
     }
-
-    function formatDate(dateString) {
-      const options = {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit"
-      };
-      return new Date(dateString).toLocaleDateString("fr-FR", options);
-    }
-
+    function formatDate(dateString) { const options = { weekday: "long", year: "numeric", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit" }; return new Date(dateString).toLocaleDateString("fr-FR", options); }
     function displayWeatherText(forecasts) {
       let textContent = "";
       forecasts.forEach((forecast) => {
-        const forecastTime = formatDate(forecast.dt * 1000);
-        const temperature = forecast.main.temp.toFixed(1);
-        const windSpeedKmh = (forecast.wind.speed * 3.6).toFixed(1);
-        const windDirectionCardinal = getWindDirection(forecast.wind.deg);
-        const rain = forecast.rain && forecast.rain["3h"] > 0 ? "précipitations prévues" : "aucune précipitation prévue";
-        const humidity = forecast.main.humidity;
-        const skyCondition = forecast.weather[0].description;
+        const forecastTime = formatDate(forecast.dt * 1000), temperature = forecast.main.temp.toFixed(1), windSpeedKmh = (forecast.wind.speed * 3.6).toFixed(1), windDirectionCardinal = getWindDirection(forecast.wind.deg), rain = forecast.rain && forecast.rain["3h"] > 0 ? "précipitations prévues" : "aucune précipitation prévue", humidity = forecast.main.humidity, skyCondition = forecast.weather[0].description;
         textContent += `Prévision du ${forecastTime}:\n${temperature}°C | ${skyCondition} | ${rain} | vent à ${windSpeedKmh} km/h venant du ${windDirectionCardinal} | ${humidity}% d'humidité\n\n`;
       });
       globalWeatherText = textContent;
     }
-
-    function copyToClipboard(text) {
-      navigator.clipboard.writeText(text).then(() => {});
-    }
-
-    function formatCoordinates(coords) {
-      const [lat, lon] = coords.split(",").map(coord => coord.trim());
-      const latNumber = parseFloat(lat);
-      const lonNumber = parseFloat(lon);
-
-      if (!isNaN(latNumber) && !isNaN(lonNumber)) {
-        return `${latNumber.toFixed(10)},${lonNumber.toFixed(10)}`;
-      }
-      return coords;
-    }
-
+    function copyToClipboard(text) { navigator.clipboard.writeText(text).then(() => {}); }
+    function formatCoordinates(coords) { const [lat, lon] = coords.split(",").map(coord => coord.trim()); const latNumber = parseFloat(lat), lonNumber = parseFloat(lon); if (!isNaN(latNumber) && !isNaN(lonNumber)) return `${latNumber.toFixed(10)},${lonNumber.toFixed(10)}`; return coords; }
     document.getElementById("coordinates").addEventListener("input", async function () {
-      let coordinates = this.value.trim();
-      coordinates = formatCoordinates(coordinates);
-      const apiKey = document.getElementById("apiKey").value;
-      const [lat, lon] = coordinates.split(",").map((coord) => coord.trim());
-
-      if (lat && lon) {
-        const forecastData = await getWeatherForecast(lat, lon, apiKey);
-        if (forecastData && forecastData.list) {
-          const now = new Date();
-          let startOfEvening = new Date(now.toDateString());
-          startOfEvening.setHours(17, 0, 0, 0);
-          let endOfMorning = new Date(now.toDateString());
-          endOfMorning.setHours(11, 0, 0, 0);
-          if (now.getHours() < 11) startOfEvening.setDate(startOfEvening.getDate() - 1);
-          else endOfMorning.setDate(endOfMorning.getDate() + 1);
-          const eveningForecasts = forecastData.list.filter(
-            (forecast) => new Date(forecast.dt * 1000) >= startOfEvening && new Date(forecast.dt * 1000) <= endOfMorning
-          );
+      let coordinates = this.value.trim(); coordinates = formatCoordinates(coordinates); const apiKey = document.getElementById("apiKey").value; const [lat, lon] = coordinates.split(",").map((coord) => coord.trim()); if (lat && lon) {
+        const forecastData = await getWeatherForecast(lat, lon, apiKey); if (forecastData && forecastData.list) {
+          const now = new Date(), startOfEvening = new Date(now.toDateString()), endOfMorning = new Date(now.toDateString()); startOfEvening.setHours(17, 0, 0, 0); endOfMorning.setHours(11, 0, 0, 0); if (now.getHours() < 11) startOfEvening.setDate(startOfEvening.getDate() - 1); else endOfMorning.setDate(endOfMorning.getDate() + 1);
+          const eveningForecasts = forecastData.list.filter((forecast) => new Date(forecast.dt * 1000) >= startOfEvening && new Date(forecast.dt * 1000) <= endOfMorning);
           displayWeatherText(eveningForecasts);
-        } else {
-          alert("Veuillez remplir d'abord l'input.");
-        }
+        } else { alert("Veuillez remplir d'abord l'input."); }
         document.getElementById("coordinates").value = globalCoordinates;
       }
     });
-
-    document.getElementById("copyButton").addEventListener("click", () => {
-      if (globalWeatherText.trim() === "") {
-        alert("Veuillez remplir d'abord l'input.");
-      } else {
-        copyToClipboard(globalWeatherText);
-      }
-    });
-
-    document.getElementById("mapsButton").addEventListener("click", function () {
-      if (globalCoordinates) {
-        const mapsUrl = `https://www.openstreetmap.org/?mlat=${globalCoordinates.split(',')[0]}&mlon=${globalCoordinates.split(',')[1]}&zoom=12`;
-        window.open(mapsUrl, "_blank");
-      } else {
-        alert("Veuillez remplir d'abord l'input.");
-      }
-    });
-    
-    document.getElementById("openSheetButton").addEventListener("click", function () {
-  const sheetUrl = "https://docs.google.com/spreadsheets/d/1KW2WZlqNWtjmKzooYt6lXLGUnkoN5mqooGgtB__Actk/edit?usp=sharing";
-  window.open(sheetUrl, "_blank");
-});
-
-
-    document.getElementById("saveButton").addEventListener("click", async function () {
-      if (globalCoordinates) {
-        const apiUrl = "https://script.google.com/macros/s/AKfycbzr0PZYghMUIR42RHFfB7kelzAYAEQxeSfvIIuonK1I2LxiFJ95AyOki1SRu2BpzySP/exec";
-
-        try {
-          const response = await fetch(apiUrl, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: new URLSearchParams({
-              'coordinates': globalCoordinates
-            })
-          });
-
-          if (response.ok) {
-            alert('Coordonnées envoyées avec succès !');
-          } else {
-            throw new Error(`Erreur HTTP: ${response.status}`);
-          }
-        } catch (error) {
-          alert('Erreur lors de l\'envoi des coordonnées.');
-        }
-      } else {
-        alert('Veuillez remplir d\'abord l\'input.');
-      }
-    });
+    document.getElementById("copyButton").addEventListener("click", () => { if (globalWeatherText.trim() === "") { alert("Veuillez remplir d'abord l'input."); } else { copyToClipboard(globalWeatherText); } });
+    document.getElementById("mapsButton").addEventListener("click", function () { if (globalCoordinates) { const mapsUrl = `https://www.openstreetmap.org/?mlat=${globalCoordinates.split(',')[0]}&mlon=${globalCoordinates.split(',')[1]}&zoom=12`; window.open(mapsUrl, "_blank"); } else { alert("Veuillez remplir d'abord l'input."); } });
+    document.getElementById("openSheetButton").addEventListener("click", function () { const sheetUrl = "https://docs.google.com/spreadsheets/d/1KW2WZlqNWtjmKzooYt6lXLGUnkoN5mqooGgtB__Actk/edit?usp=sharing"; window.open(sheetUrl, "_blank"); });
+    document.getElementById("saveButton").addEventListener("click", async function () { if (globalCoordinates) { const apiUrl = "https://script.google.com/macros/s/AKfycbzr0PZYghMUIR42RHFfB7kelzAYAEQxeSfvIIuonK1I2LxiFJ95AyOki1SRu2BpzySP/exec"; try { const response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ 'coordinates': globalCoordinates }) }); if (response.ok) { alert('Coordonnées envoyées avec succès !'); } else { throw new Error(`Erreur HTTP: ${response.status}`); } } catch (error) { alert('Erreur lors de l\'envoi des coordonnées.'); } } else { alert('Veuillez remplir d\'abord l\'input.'); } });
   </script>
 </body>
 </html>
