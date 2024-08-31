@@ -35,7 +35,7 @@
     const defaultAttributionControl=map.attributionControl;
     if(defaultAttributionControl){map.removeControl(defaultAttributionControl);}
     const loadingModal=document.getElementById('loading-modal');
-    const apiUrl='https://script.google.com/macros/s/AKfycbyCQthvDiyh-DryYVVQP6dKYjSIOnpzwfj4RE_Qjyy_vpZbSjjVJEFHR0OXYXOCpayL/exec';
+    const apiUrl='https://script.google.com/macros/s/AKfycbwo5X8Fkf1fJKowKsxiLNiV5La_zaBFKChObf1C1OYWfsnDt1vG0uvXgEwxthiRE_5Z/exec';
     fetch(apiUrl).then(response=>{if(!response.ok){throw new Error('Erreur HTTP! Statut: '+response.status);}return response.json();}).then(data=>{if(Array.isArray(data)&&data.length>0&&data[0].hasOwnProperty('lat')&&data[0].hasOwnProperty('lng')){const latlngs=data.map(point=>[point.lat,point.lng]);const lastPoint=latlngs[latlngs.length-1];map.setView(lastPoint,10);const lastIcon=L.divIcon({className:'rotating-icon',html:'<img src="https://raw.githubusercontent.com/teorpkt/teorpkt.github.io/main/icon.svg" alt="Icon"/>',iconSize:['90','90'],iconAnchor:['45','45']});latlngs.forEach((latlng,index)=>{const icon=index===latlngs.length-1?lastIcon:L.divIcon({className:'custom-icon',iconSize:[10,10],iconAnchor:[5,5]});const marker=L.marker(latlng,{icon:icon,interactive:index===latlngs.length-1}).addTo(map);if(index===latlngs.length-1){marker.on('click',function(){const sound=document.getElementById('click-sound');sound.play();});}});L.polyline(latlngs,{color:'#000000',weight:3,interactive:false}).addTo(map);loadingModal.style.display='none';}}).catch(error=>{console.error('Erreur:',error);loadingModal.style.display='none';});
   </script>
 </body>
