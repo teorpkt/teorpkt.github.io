@@ -190,7 +190,7 @@ select#apiKey:hover {
       const lonNumber = parseFloat(lon);
 
       if (!isNaN(latNumber) && !isNaN(lonNumber)) {
-        return `${latNumber.toFixed(1)},${lonNumber.toFixed(1)}`;
+        return `${latNumber.toFixed(10)},${lonNumber.toFixed(10)}`;
       }
       return coords;
     }
