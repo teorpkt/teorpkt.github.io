@@ -1,1 +1,110 @@
-<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Localisation</title><style>html{font-size:14px}*{margin:0;padding:0;box-sizing:border-box;font-family:"Roboto Mono",monospace}body{margin:0;padding:0;height:100vh;background-color:#333;color:#333;display:flex;justify-content:center;align-items:center}#console-container{background-color:#fff;border:1px solid #ddd;padding:1.5rem;width:90%;max-width:30rem;border-radius:.5rem;box-shadow:0 2px 4px rgba(0,0,0,.1)}form{display:flex;flex-direction:column;gap:.5rem}input[type=text]{padding:.75rem;font-size:1rem;border:1px solid #ccc;border-radius:.25rem;background-color:#fff;color:#333;margin-bottom:.5rem;width:100%}input[type=text]::placeholder{color:#888}button{padding:.75rem;font-size:1rem;border:1px solid #ccc;border-radius:.25rem;background-color:#f5f5f5;color:#333;cursor:pointer;width:100%;margin-bottom:.5rem;transition:background-color .3s ease,border-color .3s ease}button:hover{background-color:#e0e0e0;border-color:#bbb}</style></head><body><div id="console-container"><form><input type="text" id="coordonnees" placeholder="Coordonnées" readonly="readonly"><button type="button" onclick="copier()">Copier</button></form></div><script>function afficherLocalisation() {if (navigator.geolocation) {navigator.geolocation.getCurrentPosition(position => {const latitude = position.coords.latitude;const longitude = position.coords.longitude;document.getElementById('coordonnees').value = `${latitude}, ${longitude}`;}, erreur => {console.error('Erreur de localisation: ', erreur.message);});} else {console.error('La géolocalisation n\'est pas supportée par ce navigateur.');}}function copier() {const latitudeLongitude = document.getElementById('coordonnees').value;const texteACopier = `${latitudeLongitude}`;navigator.clipboard.writeText(texteACopier).then(() => {alert('Texte copié dans le presse-papiers!');}).catch(err => {console.error('Erreur de copie: ', err);});}window.onload = afficherLocalisation;</script></body></html>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Localisation</title>
+    <style>
+        html {
+            font-size: 14px;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Roboto Mono", monospace;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background-color: #333;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #console-container {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 1.5rem;
+            width: 90%;
+            max-width: 30rem;
+            border-radius: .5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, .1);
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: .5rem;
+        }
+        input[type=text] {
+            padding: .75rem;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: .25rem;
+            background-color: #fff;
+            color: #333;
+            margin-bottom: .5rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        input[type=text]::placeholder {
+            color: #888;
+        }
+        button {
+            padding: .75rem;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: .25rem;
+            background-color: #f5f5f5;
+            color: #333;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: .5rem;
+            transition: background-color .3s ease, border-color .3s ease;
+        }
+        button:hover {
+            background-color: #e0e0e0;
+            border-color: #bbb;
+        }
+    </style>
+</head>
+<body>
+    <div id="console-container">
+        <form>
+            <input type="text" id="coordonnees" placeholder="Coordonnées" readonly="readonly">
+            <button type="button" onclick="copier()">Copier</button>
+        </form>
+    </div>
+    <script>
+        function afficherLocalisation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+                    document.getElementById('coordonnees').value = `${latitude}, ${longitude}`;
+                }, erreur => {
+                    console.error('Erreur de localisation: ', erreur.message);
+                    document.getElementById('coordonnees').value = 'Localisation non disponible';
+                });
+            } else {
+                console.error('La géolocalisation n\'est pas supportée par ce navigateur.');
+                document.getElementById('coordonnees').value = 'Géolocalisation non supportée';
+            }
+        }
+
+        function copier() {
+            const latitudeLongitude = document.getElementById('coordonnees').value;
+            const texteACopier = `${latitudeLongitude}`;
+            navigator.clipboard.writeText(texteACopier).then(() => {
+                alert('Texte copié dans le presse-papiers!');
+            }).catch(err => {
+                console.error('Erreur de copie: ', err);
+            });
+        }
+
+        window.onload = afficherLocalisation;
+    </script>
+</body>
+</html>
