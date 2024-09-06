@@ -58,11 +58,20 @@
         }
       }
 
-      #fixed-image {
+      #top-right-image {
         position: fixed;
-        bottom: 0.625rem;
+        top: 0.625rem;
         right: 0.625rem;
         height: 5rem;
+        transform: rotate(-2deg);
+        z-index: 9998;
+      }
+
+      #bottom-left-image {
+        position: fixed;
+        bottom: 0.625rem;
+        left: 0.625rem;
+        height: 1.4rem;
         transform: rotate(2deg);
         z-index: 9998;
       }
@@ -114,7 +123,10 @@
     <div id="loading-modal">
       <p id="loading-text">Chargement</p>
     </div>
-    <div id="map"><img id="fixed-image" src="https://raw.githubusercontent.com/teorpkt/teorpkt.github.io/main/logo.svg" alt="Logo" /></div>
+    <div id="map">
+      <img id="top-right-image" src="https://raw.githubusercontent.com/teorpkt/teorpkt.github.io/main/src/panneau.svg" alt="Panneau" />
+      <img id="bottom-left-image" src="https://raw.githubusercontent.com/teorpkt/teorpkt.github.io/main/src/sens_de_marche.svg" alt="Sens de marche" />
+    </div>
 
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script>
@@ -159,7 +171,8 @@
         .catch(error => {
           console.error('Erreur:', error);
         });
- fetch('https://raw.githubusercontent.com/teorpkt/teorpkt.github.io/main/GR10.geojson')
+
+      fetch('https://raw.githubusercontent.com/teorpkt/teorpkt.github.io/main/GR10.geojson')
         .then(response => response.json())
         .then(data => {
           L.geoJSON(data, {
@@ -176,7 +189,7 @@
       let dots = 0;
 
       setInterval(() => {
-        dots = (dots + 1) % 4; // Cycle de 0 à 3
+        dots = (dots + 1) % 4;
         loadingText.textContent = 'Chargement' + '.'.repeat(dots);
       }, 400);
     </script>
