@@ -1,88 +1,184 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>La Grande Traversée des Pyrénées</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
-    <link rel="icon" href="https://raw.githubusercontent.com/teorpkt/teorpkt.github.io/main/icon.svg" type="image/svg+xml"/>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap"/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="icon" href="https://raw.githubusercontent.com/teorpkt/teorpkt.github.io/main/icon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" />
     <style>
-        * { font-family: 'Roboto Mono', monospace; }
-        html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; }
-        #map { height: 100%; width: 100%; }
-        .leaflet-marker-icon, .leaflet-interactive { pointer-events: none; }
-        .custom-icon { width: 10px; height: 10px; background: #000; border-radius: 50%; }
-        .rotating-icon img { width: 5.625rem; height: 5.625rem; animation: spin 5s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        #fixed-image { position: fixed; bottom: 0.625rem; right: 0.625rem; height: 5rem; transform: rotate(2deg); z-index: 9998; }
-        #loading-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 1); display: flex; justify-content: center; align-items: center; z-index: 9999; }
-        #loading-modal p { margin: 0; font-size: 1rem; color: #000; }
-        .leaflet-control-zoom, .leaflet-control-attribution, .leaflet-control-layers, .leaflet-control-scale, .leaflet-control-custom { display: none; }
+      * {
+        font-family: 'Roboto Mono', monospace;
+      }
+
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+
+      #map {
+        height: 100%;
+        width: 100%;
+        background-color:#fff;
+      }
+
+      .leaflet-marker-icon,
+      .leaflet-interactive {
+        pointer-events: none;
+      }
+
+      .custom-icon {
+        width: 10px;
+        height: 10px;
+        background: #000;
+        border-radius: 50%;
+      }
+
+      .rotating-icon img {
+        width: 64px;
+        height: 64px;
+        animation: spin 1s ease-in-out infinite;
+      }
+
+      @keyframes spin {
+        0%, 100% {
+          transform: scale(1) rotate(0deg);
+        }
+        25% {
+          transform: scale(1.15) rotate(-10deg);
+        }
+        50% {
+          transform: scale(1.3) rotate(0deg);
+        }
+        75% {
+          transform: scale(1.15) rotate(10deg);
+        }
+      }
+
+      #fixed-image {
+        position: fixed;
+        bottom: 0.625rem;
+        right: 0.625rem;
+        height: 5rem;
+        transform: rotate(2deg);
+        z-index: 9998;
+      }
+
+      #loading-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 1);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+      }
+
+      #loading-modal p {
+        margin: 0;
+        font-size: 1rem;
+        color: #000;
+      }
+
+      .leaflet-control-zoom,
+      .leaflet-control-attribution,
+      .leaflet-control-layers,
+      .leaflet-control-scale,
+      .leaflet-control-custom {
+        display: none;
+      }
+
+      @keyframes pop {
+        0%, 100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.3);
+        }
+      }
+
+      .rotating-pop-icon img {
+        width: 64px;
+        height: 64px;
+        animation: spin 5s linear infinite, pop 1s ease-in-out infinite;
+      }
     </style>
-</head>
-<body>
-    <div id="loading-modal"><p>Chargement...</p></div>
-    <img id="fixed-image" src="https://raw.githubusercontent.com/teorpkt/teorpkt.github.io/main/logo.svg" alt="Logo"/>
-    <div id="map"></div>
+  </head>
+  <body>
+    <div id="loading-modal">
+      <p id="loading-text">Chargement</p>
+    </div>
+    <div id="map"><img id="fixed-image" src="https://raw.githubusercontent.com/teorpkt/teorpkt.github.io/main/logo.svg" alt="Logo" /></div>
+
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script>
-        // Fonction pour ajouter le tracé GeoJSON à la carte
-        function addGeoJSONLayer(url) {
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    L.geoJSON(data, {
-                        style: {
-                            color: '#FF5900',
-                            weight: 2 // Épaisseur du trait définie à 1 pixel
-                        }
-                    }).addTo(map);
-                })
-                .catch(error => console.error('Erreur:', error));
-        }
+      const map = L.map('map').setView([42.9, 0.4], 8);
+      const apiKey = '63bb7de826d04b8796d145feb72c3362';
+      const baseMaps = {
+        "Carte Thunderforest": L.tileLayer(`https://tile.thunderforest.com/landscape/{z}/{x}/{y}.png?apikey=${apiKey}`, {
+          maxZoom: 22,
+          minZoom: 6,
+          opacity: 0.8 // Réduit l'opacité à 80%
+        })
+      };
 
-        // Initialisation de la carte
-        const map = L.map('map').setView([42.9, 0.4], 8);
-        const apiKey = '63bb7de826d04b8796d145feb72c3362';
-        const baseMaps = {
-            "Carte Thunderforest": L.tileLayer('https://tile.thunderforest.com/landscape/{z}/{x}/{y}.png?apikey=' + apiKey, { maxZoom: 22, minZoom: 8 })
-        };
-        baseMaps["Carte Thunderforest"].addTo(map);
+      baseMaps["Carte Thunderforest"].addTo(map);
+      fetch('https://script.google.com/macros/s/AKfycbwo5X8Fkf1fJKowKsxiLNiV5La_zaBFKChObf1C1OYWfsnDt1vG0uvXgEwxthiRE_5Z/exec')
+        .then(response => response.json())
+        .then(data => {
+          if (Array.isArray(data) && data.length && data[0].lat && data[0].lng) {
+            const latlngs = data.map(p => [p.lat, p.lng]);
 
-        // Ajout des points de données
-        fetch('https://script.google.com/macros/s/AKfycbwo5X8Fkf1fJKowKsxiLNiV5La_zaBFKChObf1C1OYWfsnDt1vG0uvXgEwxthiRE_5Z/exec')
-            .then(response => response.json())
-            .then(data => {
-                if (Array.isArray(data) && data.length && data[0].lat && data[0].lng) {
-                    const latlngs = data.map(p => [p.lat, p.lng]);
-                    map.setView(latlngs[latlngs.length - 1], 10);
-                    const lastIcon = L.divIcon({
-                        className: 'rotating-icon',
-                        html: '<img src="https://raw.githubusercontent.com/teorpkt/teorpkt.github.io/main/icon.svg"/>',
-                        iconSize: [90, 90],
-                        iconAnchor: [45, 45]
-                    });
-                    const markers = latlngs.map((latlng, i) => {
-                        const icon = i === latlngs.length - 1 ? lastIcon : L.divIcon({
-                            className: 'custom-icon',
-                            iconSize: [10, 10],
-                            iconAnchor: [5, 5]
-                        });
-                        const marker = L.marker(latlng, { icon, interactive: i === latlngs.length - 1 }).addTo(map);
-                        return marker;
-                    });
-                    L.polyline(latlngs, { color: '#000', weight: 3, interactive: false }).addTo(map);
-                    document.getElementById('loading-modal').style.display = 'none';
-                }
-            })
-            .catch(error => {
-                console.error('Erreur:', error);
-                document.getElementById('loading-modal').style.display = 'none';
+            map.setView(latlngs[latlngs.length - 1], 10);
+
+            const lastIcon = L.divIcon({
+              className: 'rotating-icon',
+              html: '<img src="https://raw.githubusercontent.com/teorpkt/teorpkt.github.io/main/icon.svg"/>',
+              iconSize: [64, 64],
+              iconAnchor: [32, 32]
             });
 
-        // Ajout du tracé GeoJSON en rouge
-        addGeoJSONLayer('https://raw.githubusercontent.com/teorpkt/teorpkt.github.io/main/GR10.geojson');
+            const firstIcon = L.divIcon({
+              className: 'custom-icon',
+              iconSize: [10, 10],
+              iconAnchor: [5, 5]
+            });
+
+            L.marker(latlngs[0], { icon: firstIcon, interactive: false }).addTo(map);
+            L.marker(latlngs[latlngs.length - 1], { icon: lastIcon, interactive: true }).addTo(map);
+            L.polyline(latlngs, { color: '#000', weight: 3, interactive: false }).addTo(map);
+            document.getElementById('loading-modal').style.display = 'none';
+          }
+        })
+        .catch(error => {
+          console.error('Erreur:', error);
+        });
+ fetch('https://raw.githubusercontent.com/teorpkt/teorpkt.github.io/main/GR10.geojson')
+        .then(response => response.json())
+        .then(data => {
+          L.geoJSON(data, {
+            style: {
+              color: '#FF5900',
+              weight: 2,
+              interactive: false
+            }
+          }).addTo(map);
+        })
+        .catch(error => console.error('Erreur:', error));
+
+      const loadingText = document.getElementById('loading-text');
+      let dots = 0;
+
+      setInterval(() => {
+        dots = (dots + 1) % 4; // Cycle de 0 à 3
+        loadingText.textContent = 'Chargement' + '.'.repeat(dots);
+      }, 400);
     </script>
-</body>
+  </body>
 </html>
