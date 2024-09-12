@@ -229,9 +229,10 @@
             L.marker(latlngs[0], { icon: firstIcon, interactive: false }).addTo(map);
 
             const marker = L.marker(latlngs[latlngs.length - 1], { icon: lastIcon, interactive: true }).addTo(map);
-            marker.bindPopup(getRandomPhrase(), {
+            marker.bindPopup(getRandomPhrase, {
               offset: L.point(0, -50)
             }).on('click', function() {
+              this.setContent(getRandomPhrase());
               this.openPopup();
             });
 
