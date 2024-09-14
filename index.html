@@ -1,4 +1,13 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>CodePen - Untitled</title>
+  
 
+</head>
+<body>
+<!-- partial:index.partial.html -->
 <!DOCTYPE html>
 <html lang="fr">
   <head>
@@ -19,98 +28,98 @@
       href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap"
     />
     <style>
-          * {
-            font-family: 'Roboto Mono', monospace;
-          }
-          html, body {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-          }
-          #map {
-            height: 100%;
-            width: 100%;
-            background-color: #fff;
-          }
-          .leaflet-marker-icon, .leaflet-interactive {
-            pointer-events: none;
-          }
-          .custom-icon {
-            width: 10px;
-            height: 10px;
-            background: #000;
-            border-radius: 50%;
-          }
-          .rotating-icon img {
-            width: 64px;
-            height: 64px;
-            animation: spin 1s ease-in-out infinite;
-          }
-          @keyframes spin {
-            0%, 100% {
-              transform: scale(1) rotate(0deg);
-            }
-            25% {
-              transform: scale(1.15) rotate(-10deg);
-            }
-            50% {
-              transform: scale(1.3) rotate(0deg);
-            }
-            75% {
-              transform: scale(1.15) rotate(10deg);
-            }
-          }
-          #top-right-image {
-            position: fixed;
-            top: 0.625rem;
-            right: 0.625rem;
-            height: 5rem;
-            transform: rotate(-2deg);
-            z-index: 9998;
-          }
-          #bottom-left-image {
-            position: fixed;
-            bottom: 0.625rem;
-            left: 0.625rem;
-            height: 1.5rem;
-            transform: rotate(2deg);
-            z-index: 9998;
-          }
-          #loading-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 1);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-          }
-          #loading-modal p {
-            margin: 0;
-            font-size: 1rem;
-            color: #000;
-          }
-          .leaflet-control-zoom, .leaflet-control-attribution, .leaflet-control-layers, .leaflet-control-scale, .leaflet-control-custom {
-            display: none;
-          }
-          @keyframes pop {
-            0%, 100% {
-              transform: scale(1);
-            }
-            50% {
-              transform: scale(1.3);
-            }
-          }
-          .rotating-pop-icon img {
-            width: 64px;
-            height: 64px;
-            animation: spin 5s linear infinite, pop 1s ease-in-out infinite;
-          }
-          .leaflet-popup {
+      * {
+        font-family: 'Roboto Mono', monospace;
+      }
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+      #map {
+        height: 100%;
+        width: 100%;
+        background-color: #fff;
+      }
+      .leaflet-marker-icon, .leaflet-interactive {
+        pointer-events: none;
+      }
+      .custom-icon {
+        width: 10px;
+        height: 10px;
+        background: #000;
+        border-radius: 50%;
+      }
+      .rotating-icon img {
+        width: 64px;
+        height: 64px;
+        animation: spin 1s ease-in-out infinite;
+      }
+      @keyframes spin {
+        0%, 100% {
+          transform: scale(1) rotate(0deg);
+        }
+        25% {
+          transform: scale(1.15) rotate(-10deg);
+        }
+        50% {
+          transform: scale(1.3) rotate(0deg);
+        }
+        75% {
+          transform: scale(1.15) rotate(10deg);
+        }
+      }
+      #top-right-image {
+        position: fixed;
+        top: 0.625rem;
+        right: 0.625rem;
+        height: 5rem;
+        transform: rotate(-2deg);
+        z-index: 9998;
+      }
+      #bottom-left-image {
+        position: fixed;
+        bottom: 0.625rem;
+        left: 0.625rem;
+        height: 1.5rem;
+        transform: rotate(2deg);
+        z-index: 9998;
+      }
+      #loading-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 1);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+      }
+      #loading-modal p {
+        margin: 0;
+        font-size: 1rem;
+        color: #000;
+      }
+      .leaflet-control-zoom, .leaflet-control-attribution, .leaflet-control-layers, .leaflet-control-scale, .leaflet-control-custom {
+        display: none;
+      }
+      @keyframes pop {
+        0%, 100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.3);
+        }
+      }
+      .rotating-pop-icon img {
+        width: 64px;
+        height: 64px;
+        animation: spin 5s linear infinite, pop 1s ease-in-out infinite;
+      }
+      .leaflet-popup {
         background-color: #fff !important;
         border-radius: 3px !important;
         border: 1px solid #333 !important;
@@ -118,24 +127,20 @@
         font-family: 'Roboto Mono', monospace !important;
         margin: 0 !important;
       }
-
       .leaflet-popup-tip {
         box-shadow: none !important;
         background-color: #fff !important;
         border-radius: 3px !important;
         border: 1px solid #333 !important;
       }
-
       .leaflet-popup-content-wrapper {
         box-shadow: none !important;
         background-color: #fff !important;
       }
-
       .leaflet-popup-content {
         color: #333 !important;
         line-height: 1.4 !important;
       }
-
       .leaflet-popup-close-button {
         background-color: transparent !important;
         color: #aaa !important;
@@ -227,8 +232,12 @@
               iconAnchor: [5, 5]
             });
 
-            L.marker(latlngs[0], { icon: firstIcon, interactive: false }).addTo(map);
+            // Ajouter un marker pour chaque point sauf le dernier
+            latlngs.slice(0, -1).forEach(latlng => {
+              L.marker(latlng, { icon: firstIcon, interactive: false }).addTo(map);
+            });
 
+            // Ajouter un marker pour le dernier point avec une icône personnalisée
             const marker = L.marker(latlngs[latlngs.length - 1], { icon: lastIcon, interactive: true }).addTo(map);
             marker.bindPopup(getRandomPhrase, {
               offset: L.point(0, -50)
@@ -267,4 +276,8 @@
       }, 400);
     </script>
   </body>
+</html>
+<!-- partial -->
+  
+</body>
 </html>
