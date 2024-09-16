@@ -243,20 +243,7 @@
         .catch(error => {
           console.error('Erreur:', error);
         });
-
-      fetch('https://raw.githubusercontent.com/teorpkt/teorpkt.github.io/main/GR10.geojson')
-        .then(response => response.json())
-        .then(data => {
-          L.geoJSON(data, {
-            style: {
-              color: '#FF5900',
-              weight: 2,
-              interactive: false
-            }
-          }).addTo(map);
-        })
-        .catch(error => console.error('Erreur:', error));
-
+      
       const loadingText = document.getElementById('loading-text');
       let dots = 0;
 
