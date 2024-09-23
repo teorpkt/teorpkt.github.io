@@ -222,12 +222,11 @@
         iconAnchor: [3, 3]
       });
 
-      // Ajouter un marker pour chaque point sauf le dernier
+      
       latlngs.slice(0, -1).forEach(latlng => {
         L.marker(latlng, { icon: firstIcon, interactive: false }).addTo(map);
       });
 
-      // Ajouter un marker pour le dernier point avec une icône personnalisée
       const marker = L.marker(latlngs[latlngs.length - 1], { icon: lastIcon, interactive: true }).addTo(map);
       marker.bindPopup(getRandomPhrase, {
         offset: L.point(0, -50)
@@ -236,26 +235,22 @@
         this.openPopup();
       });
 
-      // Dessiner la polyline en trois étapes :
-      
-      // 1. Polyline de tous les points avant le 11e (en noir)
       if (latlngs.length > 11) {
-        L.polyline(latlngs.slice(0, 11), { color: '#333', weight: 3, interactive: false }).addTo(map);
+        L.polyline(latlngs.slice(0, 11), { color: '#080705', weight: 3, interactive: false }).addTo(map);
       }
 
-      // 2. Polyline entre le 11e et le 12e point (en gri
+      
       if (latlngs.length > 11) {
     L.polyline([latlngs[10], latlngs[11]], {
         color: '#FF5E5B', 
         weight: 3, 
         interactive: false,
-        dashArray: '5, 5'  // 5px de ligne, 10px d'espace
+        dashArray: '5, 5' 
     }).addTo(map);
 }
       
-      // 3. Polyline pour tous les points après le 12e (en noir)
       if (latlngs.length > 11) {
-        L.polyline(latlngs.slice(11), { color: '#333', weight: 3, interactive: false }).addTo(map);
+        L.polyline(latlngs.slice(11), { color: '#080705', weight: 3, interactive: false }).addTo(map);
       }
 
       document.getElementById('loading-modal').style.display = 'none';
