@@ -42,6 +42,7 @@
         border-radius: 50%;
       }
       .rotating-icon img {
+        z-index:999999;
         width: 32px;
         height: 32px;
         animation: spin 1s ease-in-out infinite;
@@ -107,6 +108,7 @@
       .rotating-pop-icon img {
         width: 64px;
         height: 64px;
+        z-index:999999;
         animation: spin 5s linear infinite, pop 1s ease-in-out infinite;
       }
       .leaflet-popup {
@@ -242,7 +244,7 @@
       
       if (latlngs.length > 11) {
     L.polyline([latlngs[10], latlngs[11]], {
-        color: '#F7D002', 
+        color: '#BF1A2F', 
         weight: 3, 
         interactive: false,
         dashArray: '5, 5' 
