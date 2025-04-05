@@ -2,24 +2,39 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Résolution de la fenêtre</title>
+  <title>Résolution fenêtre</title>
   <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 2em;
+      background: #f9f9f9;
+    }
+    #res {
+      font-size: 1.5em;
+      margin-top: 2em;
+      background: #eee;
+      display: inline-block;
+      padding: 1em 2em;
+      border-radius: 0.5em;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
   </style>
 </head>
 <body>
-  <div class="resolution" id="resolution">
-    Résolution : 
-  </div>
+  <h1>Résolution actuelle de la fenêtre</h1>
+  <div id="res">Chargement...</div>
 
   <script>
-    function updateResolution() {
-      const width = window.innerWidth;
-      const height = window.innerHeight;
-      document.getElementById("resolution").textContent = `Résolution : ${width} x ${height}px`;
+    function updateRes() {
+      var largeur = window.innerWidth;
+      var hauteur = window.innerHeight;
+      var resDiv = document.getElementById('res');
+      resDiv.innerHTML = largeur + " x " + hauteur + " px";
     }
 
-    window.addEventListener('resize', updateResolution);
-    updateResolution(); // Appelle au chargement
+    window.onload = updateRes;
+    window.onresize = updateRes;
   </script>
 </body>
 </html>
