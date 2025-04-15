@@ -2,39 +2,22 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Résolution fenêtre</title>
+  <title>Plein Écran</title>
   <style>
-    body {
-      font-family: sans-serif;
-      text-align: center;
-      padding: 2em;
-      background: #f9f9f9;
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
     }
-    #res {
-      font-size: 1.5em;
-      margin-top: 2em;
-      background: #eee;
-      display: inline-block;
-      padding: 1em 2em;
-      border-radius: 0.5em;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    iframe {
+      border: none;
+      width: 100%;
+      height: 100%;
     }
   </style>
 </head>
 <body>
-  <h1>Résolution actuelle de la fenêtre</h1>
-  <div id="res">Chargement...</div>
-
-  <script>
-    function updateRes() {
-      var largeur = window.innerWidth;
-      var hauteur = window.innerHeight;
-      var resDiv = document.getElementById('res');
-      resDiv.innerHTML = largeur + " x " + hauteur + " px";
-    }
-
-    window.onload = updateRes;
-    window.onresize = updateRes;
-  </script>
+  <iframe src="https://cdpn.io/pen/debug/emmOQYe?authentication_hash=XBAGRWxZONQr" allowfullscreen></iframe>
 </body>
 </html>
